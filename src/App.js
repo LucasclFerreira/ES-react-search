@@ -10,6 +10,7 @@ function App() {
     setQuery(searchQuery);
   };
 
+  console.log(query);
   return (
     <div className="App w-screen h-screen flex flex-col justify-center items-center">
       <h1 className="text-5xl font-light p-8">SearchOnWiki</h1>
