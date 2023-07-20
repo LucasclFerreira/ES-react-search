@@ -1,26 +1,70 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import Result from "./Result";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const Results = () => {
-  const [data, setData] = useState();
+const sortResults = (query, page, orderBy, order, dateRange=null) => {
+  let orderToSort;
+  let sortField;
+  let url;
 
-  useEffect(() => {
-    const dataFetch = async () => {
-      const data = await (
-        await fetch()
-        // localhost
-      ).json();
-      setData(data);
-    };
+  if (orderBy === 'Reading Time') {
+    sortField = 'reading_time'
+  } else {
+    sortField = 'dt_creation'
+  }
 
-    dataFetch();
-  }, []);
+  if (order === 'Ascending') {
+    orderToSort = 'asc'
+  } else {
+    orderToSort = 'desc'
+  }
+  console.log(sortField, orderToSort)
+  if (dateRange) {
+    url = `http://localhost:8080/v1/searchBetweenDatesAndSort?query=${query}&page=${page}&orderToSort=${orderToSort}&sortField=${sortField}&rangeDate=${dateRange}`;
+  } else {
+    url = `http://localhost:8080/v1/searchAndSort?query=${query}&page=${page}&orderToSort=${orderToSort}&sortField=${sortField}`;
+  }
+  // console.log('nova url: ' + url);
+  return url
+}
+
+const Results = ({ query, page, orderBy, order, dateRange }) => {
+  let url = `http://localhost:8080/v1/search?query=${query}&page=${page}`;
+
+  if (orderBy && dateRange) {
+    url = sortResults(query, page, orderBy, order, dateRange);
+  } else if (orderBy) {
+    url = sortResults(query, page, orderBy, order);
+  } else if (dateRange) {
+    url = `http://localhost:8080/v1/searchBetweenDates?query=${query}&page=${page}&rangeDate=${dateRange}`;
+  }
+
+
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: [query, page, orderBy, order],
+    queryFn: async () => {
+      const { data } = await axios.get(url);
+      return data;
+    }
+  });
+
+  console.log(data)
+
+  if (isError) {
+    return <div className="text-danger">{ error }</div>
+  }
+
+  if (isLoading) {
+    return <div className="text-5xl text-warning">Loading...</div>
+  }
 
   return (
     <div>
-      {data.map((result) => (
+      {console.log(url)}
+      { data.results && data.results.map((result) => (
         <Result key={result.url} result={result} />
-      ))}
+      )) }
     </div>
   );
 };
