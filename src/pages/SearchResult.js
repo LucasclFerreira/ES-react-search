@@ -9,7 +9,7 @@ const SearchResult = () => {
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState(null);
   const [dateRange, setDateRange] = useState(null);
-  const numPages = 10;
+  const [numPages, setNumPages] = useState(1);
 
   const getQuery = (searchQuery, orderBy, order, dateRange) => {
     console.log('get query chamado pelo componente search')
@@ -22,6 +22,13 @@ const SearchResult = () => {
     setPage(1)
   };
 
+  const getNumPages = (pages) => {
+    let total = Math.trunc(pages / 10);
+    let totalPages = pages % 10 === 0 ? total : total + 1;
+    setNumPages(totalPages);
+    console.log(`${pages} docs generated ${totalPages} pages`)
+  }
+
   const handleNext = () => {
     let nextPage = page + 1;
     setPage(nextPage);
@@ -32,6 +39,8 @@ const SearchResult = () => {
     setPage(prevPage);
   };
 
+  console.log('num of pages = ' + numPages)
+
   return (
     <div data-theme="emerald">
       <nav className="sticky top-0 z-50 bg-base-100 max-w-screen h-1/5 flex justify-between items-center px-10 lg:px-24 py-4">
@@ -41,12 +50,12 @@ const SearchResult = () => {
       </nav>
       <main className="relative max-w-screen min-h-screen px-10 py-24 lg:px-24 flex flex-col items-center">
         {query === '' ? 
-          <div className="max-h-screen flex flex-col items-center justify-center">
-            <h2 className="text-5xl font-bold text-neutral mb-8">Uh-oh...</h2>
-            <h2 className="text-5xl font-light text-neutral">Search something!</h2>
+          <div className="max-h-screen flex flex-col items-center justify-center pt-24">
+            <h2 className="text-5xl text-neutral font-bold mb-4">Hi!</h2>
+            <h2 className="text-3xl font-bold text-neutral">Try searching something 😉</h2>
           </div> : 
           <div className="flex flex-col items-center">
-            <Results query={query} page={page} orderBy={orderBy} order={order} dateRange={dateRange} />
+            <Results query={query} page={page} orderBy={orderBy} order={order} dateRange={dateRange} getNumPages={getNumPages} />
             <div className="join my-8">
               {page === 1 ? (
                 <button className="join-item btn btn-disabled">«</button>

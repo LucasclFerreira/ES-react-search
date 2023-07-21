@@ -11,8 +11,7 @@ const queryClient = new QueryClient()
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/'>
-      <Route index element={<App />} />
-      <Route path='/results' element={<SearchResult />} />
+      <Route index element={<SearchResult />} />
     </Route>
   )
 )

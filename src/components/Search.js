@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Search = ({ getQuery, getOrderBy, getOrder }) => {
+const Search = ({ getQuery }) => {
   const [input, setInput] = useState("");
   const [orderBy, setOrderBy] = useState(null)
   const [order, setOrder] = useState(null)
@@ -77,11 +77,9 @@ const Search = ({ getQuery, getOrderBy, getOrder }) => {
         className="input input-bordered w-full max-w-xs ml-4 mr-4"
         onChange={handleChange}
       />
-      <Link to='/results'>
-        <button onClick={handleClick} className="btn btn-primary">
-          Search
-        </button>
-      </Link>
+      <button onClick={handleClick} className="btn btn-primary">
+        Search
+      </button>
     </div>
   );
 };

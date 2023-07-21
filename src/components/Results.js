@@ -29,7 +29,7 @@ const sortResults = (query, page, orderBy, order, dateRange=null) => {
   return url
 }
 
-const Results = ({ query, page, orderBy, order, dateRange }) => {
+const Results = ({ query, page, orderBy, order, dateRange, getNumPages }) => {
   let url = `http://localhost:8080/v1/search?query=${query}&page=${page}`;
 
   if (orderBy && dateRange) {
@@ -45,6 +45,7 @@ const Results = ({ query, page, orderBy, order, dateRange }) => {
     queryKey: [query, page, orderBy, order],
     queryFn: async () => {
       const { data } = await axios.get(url);
+      getNumPages(data.numDocs)
       return data;
     }
   });
@@ -56,12 +57,12 @@ const Results = ({ query, page, orderBy, order, dateRange }) => {
   }
 
   if (isLoading) {
-    return <div className="text-5xl text-warning">Loading...</div>
+    return <div className="text-5xl text-warning font-bold">Loading...</div>
   }
 
   return (
     <div>
-      {console.log(url)}
+      {/* {console.log(url)} */}
       { data.results && data.results.map((result) => (
         <Result key={result.url} result={result} />
       )) }
