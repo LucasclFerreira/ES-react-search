@@ -63,6 +63,7 @@ const Results = ({ query, page, orderBy, order, dateRange, getNumPages }) => {
   return (
     <div>
       {/* {console.log(url)} */}
+      { data.suggestion && <p className="text-xl text-center font-light ml-2 border-l-4 border-r-4 border-base-400 mb-8">I assume you're searching for <span className="text-error font-bold">{data.suggestion}</span></p>}
       { data.results && data.results.map((result) => (
         <Result key={result.url} result={result} />
       )) }
