@@ -18,6 +18,7 @@ const Search = ({ getQuery }) => {
     let dateRange = null;
     if (startDate && endDate) {
       dateRange = startDate + 'to' + endDate
+      console.log(dateRange)
     }
     getQuery(input, orderBy, order, dateRange);
   };

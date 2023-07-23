@@ -2,6 +2,8 @@
 import Result from "./Result";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useEffect } from "react";
+import { Router, useNavigate } from "react-router-dom";
 
 const sortResults = (query, page, orderBy, order, dateRange=null) => {
   let orderToSort;
@@ -30,27 +32,33 @@ const sortResults = (query, page, orderBy, order, dateRange=null) => {
 }
 
 const Results = ({ query, page, orderBy, order, dateRange, getNumPages }) => {
+  const navigate = useNavigate()
   let url = `http://localhost:8080/v1/search?query=${query}&page=${page}`;
 
   if (orderBy && dateRange) {
+    console.log('orderBy and dateRange: ' + dateRange)
     url = sortResults(query, page, orderBy, order, dateRange);
   } else if (orderBy) {
     url = sortResults(query, page, orderBy, order);
   } else if (dateRange) {
+    console.log('orderBy and dateRange only: ' + dateRange)
     url = `http://localhost:8080/v1/searchBetweenDates?query=${query}&page=${page}&rangeDate=${dateRange}`;
   }
 
 
   const { data, isLoading, error, isError } = useQuery({
-    queryKey: [query, page, orderBy, order],
+    queryKey: [query, page, orderBy, order, dateRange],
     queryFn: async () => {
       const { data } = await axios.get(url);
       getNumPages(data.numDocs)
+      // navigate('/results')
       return data;
     }
   });
 
-  console.log(data)
+  // useEffect(() => {
+  //   navigate('/results')
+  // }, [data])
 
   if (isError) {
     return <div className="text-danger">{ error }</div>

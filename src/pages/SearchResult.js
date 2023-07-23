@@ -55,6 +55,7 @@ const SearchResult = () => {
             <h2 className="text-3xl font-bold text-neutral">Try searching something 😉</h2>
           </div> : 
           <div className="flex flex-col items-center">
+            {console.log('date range dentro da div do searchResult: ' + dateRange)}
             <Results query={query} page={page} orderBy={orderBy} order={order} dateRange={dateRange} getNumPages={getNumPages} />
             <div className="join my-8">
               {page === 1 ? (
